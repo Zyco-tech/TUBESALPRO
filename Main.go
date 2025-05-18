@@ -1,3 +1,22 @@
+package main
+
+import (
+	"fmt"
+)
+
+type dataLangganan struct {
+	nama       string
+	metode     string
+	biaya      float64
+	tanggal    int
+	status     string
+	jatuhTempo int
+}
+
+const NMAX int = 10
+
+type TabLangganan [NMAX]dataLangganan
+
 func main() {
 	var A TabLangganan
 	var jumlah, pilih int

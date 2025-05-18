@@ -121,7 +121,7 @@ func TampilkanLangganan(A TabLangganan, i int) {
 		fmt.Printf("   %d hari sebelum jatuh tempo\n", A[i].jatuhTempo)
 	}
 	fmt.Printf("   Status: %s\n", A[i].status)
-	fmt.Println("-------------------------")
+	fmt.Println("---------------------------")
 }
 func SelectionSortBiaya(A *TabLangganan, N int) {
 	var i, idx, pass int
@@ -144,6 +144,23 @@ func SelectionSortBiaya(A *TabLangganan, N int) {
 		A[idx] = temp
 		pass++
 
+	}
+}
+func InsertionSortJatuhTempo(A *TabLangganan, N int) {
+    var pass, i int
+    var temp dataLangganan
+
+    pass = 1
+    for pass <= N-1 {
+        i = pass
+        temp = A[pass]
+
+        for i > 0 && temp.tanggal > A[i-1].tanggal {
+            A[i] = A[i-1]
+			i--
+        }
+		A[i] = temp
+    	pass++
 	}
 }
 func TampilkanSemuaLangganan(A TabLangganan, jumlah int) {

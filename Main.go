@@ -120,7 +120,7 @@ func MenambahLangganan(A *TabLangganan, jumlah *int) {
 
 	fmt.Print("Status (aktif/nonaktif): ")
 	fmt.Scan(&A[*jumlah].status)
-	*jumlah++
+	*jumlah += 1
 	fmt.Println("Langganan berhasil ditambahkan.")
 }
 func ubahData(A *TabLangganan, jumlah int) {
@@ -158,7 +158,7 @@ func hapusData(A *TabLangganan, n *int) {
 	for i = j - 1; i < *n; i++ {
 		A[i] = A[i+1]
 	}
-	*n--
+	*n -= 1
 }
 func seqSearch(A TabLangganan, n, pilihan int) {
 	var i int
@@ -201,7 +201,7 @@ func binSearch(A TabLangganan, n, pilihan int) {
 		if dicari < A[mid].tanggal {
 			right = mid - 1
 		} else if dicari > A[mid].tanggal {
-			left = right + 1
+			left = mid + 1
 		} else {
 			idx = mid
 		}

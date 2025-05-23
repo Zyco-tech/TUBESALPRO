@@ -24,7 +24,7 @@ func main() {
 
 	for {
 		menu()
-		fmt.Println("Pilih (1/2/3/4/5/6/7/8) ")
+		fmt.Println("Pilih (1/2/3/4/5/6/7/8) : ")
 		fmt.Scan(&pilih)
 
 		switch pilih {
@@ -38,7 +38,7 @@ func main() {
 			TampilkanSemuaLangganan(A, jumlah)
 		case 5:
 			menuSearch()
-			fmt.Println("Pilih (1/2/3/4/5/6) ")
+			fmt.Println("Pilih (1/2/3/4/5/6) : ")
 			fmt.Scan(&pilih)
 			switch pilih {
 			case 1:
@@ -57,7 +57,7 @@ func main() {
 
 		case 6:
 			menuSort()
-			fmt.Println("Pilih (1/2/3) ")
+			fmt.Println("Pilih (1/2/3) : ")
 			fmt.Scan(&pilih)
 			switch pilih {
 			case 1:
@@ -75,31 +75,31 @@ func main() {
 	}
 }
 func menu() {
-	fmt.Println("==============MENU=============")
-	fmt.Println("1. Tambah Data Langganan")
-	fmt.Println("2. Ubah Data Langganan")
-	fmt.Println("3. Hapus Data Langganan")
-	fmt.Println("4.	Tampilkan Semua Langganan")
-	fmt.Println("5.	Search Data")
-	fmt.Println("6.	Sort Data")
-	fmt.Println("7.	Hitung Pengeluaran Perbulan") //mungkin ganti lagi kalimatnya
-	fmt.Println("8.	Exit")
-	fmt.Println("===============================")
+	fmt.Printf("%-30s\n", "============= MENU =============")
+	fmt.Printf("%-30s\n", "1. Tambah data langganan")
+	fmt.Printf("%-30s\n", "2. Ubah data langganan")
+	fmt.Printf("%-30s\n", "3. Hapus data langganan")
+	fmt.Printf("%-30s\n", "4. Tampilkan tabel data")
+	fmt.Printf("%-30s\n", "5. Search Data")
+	fmt.Printf("%-30s\n", "6. Sort Data")
+	fmt.Printf("%-30s\n", "7. Hitung Pengeluaran Perbulan")
+	fmt.Printf("%-30s\n", "8. Exit")
+	fmt.Printf("%-30s\n", "================================")
 }
 func menuSearch() {
-	fmt.Println("Search Berdasarkan Apa?")
-	fmt.Println("1.	Nama")
-	fmt.Println("2.	Metode Pembayaran")
-	fmt.Println("3.	Biaya")
-	fmt.Println("4.	Tanggal Pembayaran")
-	fmt.Println("5.	Status")
-	fmt.Println("6.	Kembali")
+	fmt.Printf("%-30s\n", "Search Berdasarkan Apa?")
+	fmt.Printf("%-30s\n", "1. Nama")
+	fmt.Printf("%-30s\n", "2. Metode Pembayaran")
+	fmt.Printf("%-30s\n", "3. Biaya")
+	fmt.Printf("%-30s\n", "4. Tanggal Pembayaran")
+	fmt.Printf("%-30s\n", "5. Status")
+	fmt.Printf("%-30s\n", "6. Kembali")
 }
 func menuSort() {
-	fmt.Println("Sort Berdasarkan Apa?")
-	fmt.Println("1.	Biaya")
-	fmt.Println("2.	Tanggal Jatuh Tempo")
-	fmt.Println("3.	Kembali")
+	fmt.Printf("%-30s\n", "Sort Berdasarkan Apa?")
+	fmt.Printf("%-30s\n", "1. Biaya")
+	fmt.Printf("%-30s\n", "2. Tanggal Jatuh Tempo")
+	fmt.Printf("%-30s\n", "3. Kembali")
 }
 func MenambahLangganan(A *TabLangganan, jumlah *int) {
 	if *jumlah >= NMAX {
@@ -107,7 +107,7 @@ func MenambahLangganan(A *TabLangganan, jumlah *int) {
 		return
 	}
 
-	fmt.Println("=== Tambah Langganan ===")
+	fmt.Println("======= Tambah Langganan =======")
 	fmt.Print("Nama Layanan: ")
 	fmt.Scan(&A[*jumlah].nama)
 	fmt.Print("Metode Pembayaran: ")
@@ -122,6 +122,7 @@ func MenambahLangganan(A *TabLangganan, jumlah *int) {
 	fmt.Scan(&A[*jumlah].status)
 	*jumlah += 1
 	fmt.Println("Langganan berhasil ditambahkan.")
+	fmt.Println("================================")
 }
 func ubahData(A *TabLangganan, jumlah int) {
 	var j int
@@ -132,7 +133,7 @@ func ubahData(A *TabLangganan, jumlah int) {
 	if j == 0 {
 		return
 	}
-	fmt.Println("=== Ubah Langganan ===")
+	fmt.Println("====== Ubah Data Langganan ======")
 	fmt.Print("Nama Layanan: ")
 	fmt.Scan(&A[j-1].nama)
 	fmt.Print("Metode Pembayaran: ")
@@ -146,6 +147,7 @@ func ubahData(A *TabLangganan, jumlah int) {
 	fmt.Print("Status (aktif/nonaktif): ")
 	fmt.Scan(&A[j-1].status)
 	fmt.Println("Langganan berhasil diubah.")
+	fmt.Println("================================")
 }
 func hapusData(A *TabLangganan, n *int) {
 	var j, i int
@@ -222,12 +224,12 @@ func TampilkanLangganan(A TabLangganan, i int) {
 	fmt.Printf("   Tanggal Pembayaran: %d\n", A[i].tanggal)
 	hitungTempo(&A, i)
 	if A[i].jatuhTempo < 0 {
-		fmt.Printf("   Jatuh tempo telah lewat %d hari\n", (time.Now().Day() - A[i].tanggal))
+		fmt.Printf("   Jatuh tempo telah lewat : %d hari\n", (time.Now().Day() - A[i].tanggal))
 	} else {
 		fmt.Printf("   %d hari sebelum jatuh tempo\n", A[i].jatuhTempo)
 	}
 	fmt.Printf("   Status: %s\n", A[i].status)
-	fmt.Println("---------------------------")
+	fmt.Println("================================")
 }
 func SelectionSortBiaya(A *TabLangganan, N int) {
 	var i, idx, pass int
@@ -285,7 +287,7 @@ func TampilkanSemuaLangganan(A TabLangganan, jumlah int) {
 		return
 	}
 
-	fmt.Println("=== Daftar Langganan ===")
+	fmt.Println("======= Daftar Langganan =======")
 	for i = 0; i < jumlah; i++ {
 		TampilkanLangganan(A, i)
 	}

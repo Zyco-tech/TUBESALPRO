@@ -24,7 +24,7 @@ func main() {
 
 	for {
 		menu()
-		fmt.Println("Pilih (1/2/3/4/5/6/7/8) : ")
+		fmt.Print("Pilih (1/2/3/4/5/6/7/8) : ")
 		fmt.Scan(&pilih)
 
 		switch pilih {
@@ -37,40 +37,14 @@ func main() {
 		case 4:
 			TampilkanSemuaLangganan(A, jumlah)
 		case 5:
-			menuSearch()
-			fmt.Println("Pilih (1/2/3/4/5/6) : ")
-			fmt.Scan(&pilih)
-			switch pilih {
-			case 1:
-				seqSearch(A, jumlah, pilih)
-			case 2:
-				seqSearch(A, jumlah, pilih)
-			case 3:
-				// biaya binary
-			case 4:
-				binSearch(A, jumlah, pilih)
-			case 5:
-				// status seq
-			case 6:
-				break
-			}
-
+			search(A, jumlah)
 		case 6:
-			menuSort()
-			fmt.Println("Pilih (1/2/3) : ")
-			fmt.Scan(&pilih)
-			switch pilih {
-			case 1:
-				SelectionSortBiaya(&A, jumlah)
-			case 2:
-				InsertionSortJatuhTempo(&A, jumlah)
-			case 3:
-				break
-			}
+			sort(A, jumlah)
 		case 7:
-			fmt.Printf("Total Pengeluaran Perbulan Adalah Rp.%.2f\n", hitungPengeluaran(A, jumlah))
-		case 8:
-			return
+			hitungPengeluaran(A, jumlah)
+		}
+		if pilih == 8 {
+			break
 		}
 	}
 }
@@ -93,15 +67,27 @@ func menuSearch() {
 	fmt.Printf("%-30s\n", "3. Biaya")
 	fmt.Printf("%-30s\n", "4. Tanggal Pembayaran")
 	fmt.Printf("%-30s\n", "5. Status")
-	fmt.Printf("%-30s\n", "6. Kembali")
+	fmt.Printf("%-30s\n", "6. Nilai Terbesar")
+	fmt.Printf("%-30s\n", "7. Nilai Terkecil")
+	fmt.Printf("%-30s\n", "8. Kembali")
 }
 func menuSort() {
-	fmt.Printf("%-30s\n", "Sort Berdasarkan Apa?")
+	fmt.Printf("%-30s\n", "Urutkan Berdasarkan?")
+	fmt.Printf("%-30s\n", "1. Nama")
+	fmt.Printf("%-30s\n", "2. Metode Pembayaran ")
+	fmt.Printf("%-30s\n", "3. Biaya")
+	fmt.Printf("%-30s\n", "4. Tanggal")
+	fmt.Printf("%-30s\n", "5. Kembali")
+}
+func menuFindMaxMin() {
+	fmt.Printf("%-30s\n", "Search Berdasarkan Apa?")
 	fmt.Printf("%-30s\n", "1. Biaya")
-	fmt.Printf("%-30s\n", "2. Tanggal Jatuh Tempo")
+	fmt.Printf("%-30s\n", "2. Tanggal")
 	fmt.Printf("%-30s\n", "3. Kembali")
 }
 func MenambahLangganan(A *TabLangganan, jumlah *int) {
+	var pilih int
+
 	if *jumlah >= NMAX {
 		fmt.Println("Data langganan penuh!")
 		return
@@ -117,71 +103,236 @@ func MenambahLangganan(A *TabLangganan, jumlah *int) {
 
 	fmt.Print("Tanggal Pembayaran (1-31): ")
 	fmt.Scan(&A[*jumlah].tanggal)
+	if A[*jumlah].tanggal < 1 || A[*jumlah].tanggal > 31 {
+		fmt.Println("Tanggal Tidak Valid!")
+		return
+	}
 
-	fmt.Print("Status (aktif/nonaktif): ")
-	fmt.Scan(&A[*jumlah].status)
+	fmt.Print("Status aktif/nonaktif (1/2): ")
+	fmt.Scan(&pilih)
+	if pilih == 1 {
+		A[*jumlah].status = "Aktif"
+	} else if pilih == 2 {
+		A[*jumlah].status = "Nonaktif"
+	} else {
+		fmt.Println("Pilihan Tidak Valid!")
+		return
+	}
+
 	*jumlah += 1
 	fmt.Println("Langganan berhasil ditambahkan.")
 	fmt.Println("================================")
 }
 func ubahData(A *TabLangganan, jumlah int) {
-	var j int
-	//prosedur print tabel
+	var j, i, pilih int
+	var ada bool = false
+
+	if jumlah <= 0 {
+		fmt.Println("Data Langganan Kosong!")
+		return
+	}
+
 	TampilkanSemuaLangganan(*A, jumlah)
-	fmt.Println("Pilih nomor yang akan diubah (0 untuk kembali)")
+	fmt.Print("Pilih nomor yang akan diubah (0 untuk kembali): ")
 	fmt.Scan(&j)
 	if j == 0 {
 		return
 	}
-	fmt.Println("====== Ubah Data Langganan ======")
-	fmt.Print("Nama Layanan: ")
-	fmt.Scan(&A[j-1].nama)
-	fmt.Print("Metode Pembayaran: ")
-	fmt.Scan(&A[j-1].metode)
-	fmt.Print("Biaya Bulanan: ")
-	fmt.Scan(&A[j-1].biaya)
+	for i < jumlah && !ada {
+		ada = i == j-1
+		i++
+	}
+	if ada {
+		fmt.Println("====== Ubah Data Langganan ======")
+		fmt.Print("Nama Layanan: ")
+		fmt.Scan(&A[j-1].nama)
 
-	fmt.Print("Tanggal Pembayaran (1-31): ")
-	fmt.Scan(&A[j-1].tanggal)
+		fmt.Print("Metode Pembayaran: ")
+		fmt.Scan(&A[j-1].metode)
 
-	fmt.Print("Status (aktif/nonaktif): ")
-	fmt.Scan(&A[j-1].status)
-	fmt.Println("Langganan berhasil diubah.")
-	fmt.Println("================================")
+		fmt.Print("Biaya Bulanan: ")
+		fmt.Scan(&A[j-1].biaya)
+
+		fmt.Print("Tanggal Pembayaran (1-31): ")
+		fmt.Scan(&A[j-1].tanggal)
+		if A[j-1].tanggal < 1 && A[j-1].tanggal > 31 {
+			fmt.Println("Tanggal Tidak Valid")
+			return
+		}
+
+		fmt.Print("Status aktif/nonaktif (1/2): ")
+		fmt.Scan(&pilih)
+		if pilih == 1 {
+			A[j-1].status = "Aktif"
+		} else if pilih == 2 {
+			A[j-1].status = "Nonaktif"
+		} else {
+			fmt.Println("Status Tidak Valid")
+			return
+		}
+
+		fmt.Println("Langganan berhasil diubah.")
+		fmt.Println("================================")
+	} else {
+		fmt.Println("Data tidak ditemukan!")
+		return
+	}
 }
 func hapusData(A *TabLangganan, n *int) {
 	var j, i int
+	var ada bool = false
+
+	if *n <= 0 {
+		fmt.Println("Data Langganan Kosong!")
+		return
+	}
 	TampilkanSemuaLangganan(*A, *n)
-	fmt.Println("pilih nomor yg akan dihapus (0 untuk kembali)")
+	fmt.Print("Pilih nomor yang akan dihapus (0 untuk kembali): ")
 	fmt.Scan(&j)
 	if j == 0 {
 		return
 	}
-	for i = j - 1; i < *n; i++ {
-		A[i] = A[i+1]
+	for i < *n && !ada {
+		ada = i == j-1
+		i++
 	}
-	*n -= 1
+
+	if ada {
+		for i = j - 1; i < *n-1; i++ {
+			A[i] = A[i+1]
+		}
+		*n -= 1
+	} else {
+		fmt.Println("Data tidak ditemukan!")
+		return
+	}
+}
+func search(A TabLangganan, jumlah int) {
+	var pilih int
+	var iMax, iMin int
+
+	if jumlah <= 0 {
+		fmt.Println("Data Langganan Kosong!")
+		return
+	}
+
+	menuSearch()
+	fmt.Print("Pilih (1/2/3/4/5/6) : ")
+	fmt.Scan(&pilih)
+
+	switch pilih {
+	case 1:
+		seqSearch(A, jumlah, pilih)
+	case 2:
+		seqSearch(A, jumlah, pilih)
+	case 3:
+		binSearch(A, jumlah, pilih)
+	case 4:
+		binSearch(A, jumlah, pilih)
+	case 5:
+		seqSearch(A, jumlah, pilih)
+	case 6:
+		menuFindMaxMin()
+		fmt.Print("Pilih (1/2/3) : ")
+		fmt.Scan(&pilih)
+
+		switch pilih {
+		case 1:
+			findMax(A, jumlah, pilih, &iMax)
+			fmt.Println("================================")
+			fmt.Println("Biaya terbesar ada di:")
+			TampilkanLangganan(A, iMax)
+		case 2:
+			findMax(A, jumlah, pilih, &iMax)
+			fmt.Println("================================")
+			fmt.Println("Tanggal terbesar ada di:")
+			TampilkanLangganan(A, iMax)
+		case 3:
+			return
+		}
+	case 7:
+		menuFindMaxMin()
+		fmt.Print("Pilih (1/2/3) : ")
+		fmt.Scan(&pilih)
+
+		switch pilih {
+		case 1:
+			findMin(A, jumlah, pilih, &iMin)
+			fmt.Println("================================")
+			fmt.Println("Biaya terkecil ada di:")
+			TampilkanLangganan(A, iMin)
+		case 2:
+			findMin(A, jumlah, pilih, &iMin)
+			fmt.Println("================================")
+			fmt.Println("Tanggal terkecil ada di:")
+			TampilkanLangganan(A, iMin)
+		case 3:
+			return
+		}
+	case 8:
+		return
+	}
 }
 func seqSearch(A TabLangganan, n, pilihan int) {
 	var i int
 	var ketemu bool
 	var dicari string
 
-	fmt.Println("Masukkan yang akan dicari")
-	fmt.Scan(&dicari)
-	ketemu = false
 	i = 0
-	if pilihan == 1 {
-		for i < n && !ketemu {
-			ketemu = A[i].nama == dicari
-			i++
-		}
-	} else if pilihan == 2 {
-		for i < n && !ketemu {
-			ketemu = A[i].metode == dicari
-			i++
+	if pilihan == 1 || pilihan == 2 {
+		fmt.Print("Masukkan yang akan dicari: ")
+		fmt.Scan(&dicari)
+		ketemu = false
+		if pilihan == 1 {
+			for i < n && !ketemu {
+				ketemu = A[i].nama == dicari
+				i++
+			}
+		} else if pilihan == 2 {
+			for i < n {
+				if i == 0 {
+					fmt.Printf("Metode pembayaran %s berada pada data:\n", dicari)
+				}
+				if A[i].metode == dicari {
+					TampilkanLangganan(A, i)
+				}
+				i++
+			}
 		}
 	}
+
+	if pilihan == 5 {
+		fmt.Println("Search pilihan aktif/nonaktif (1/2)")
+		fmt.Scan(&pilihan)
+		if pilihan == 1 {
+
+			for i < n {
+				if i == 0 {
+					fmt.Println("Langganan aktif berada pada data:")
+				}
+				if A[i].status == "Aktif" {
+					TampilkanLangganan(A, i)
+				}
+				i++
+			}
+			return
+		} else if pilihan == 2 {
+			for i < n {
+				if i == 0 {
+					fmt.Println("Langganan nonaktif berada pada data:")
+				}
+				if A[i].status == "Nonaktif" {
+					TampilkanLangganan(A, i)
+				}
+				i++
+			}
+			return
+		} else {
+			fmt.Println("Pilihan Tidak Valid")
+			return
+		}
+	}
+
 	if ketemu {
 		TampilkanLangganan(A, i-1)
 	} else {
@@ -191,69 +342,121 @@ func seqSearch(A TabLangganan, n, pilihan int) {
 func binSearch(A TabLangganan, n, pilihan int) {
 	var left, right, mid int
 	var idx int
-	var dicari int
-	fmt.Println("Masukkan yang akan dicari")
-	fmt.Scan(&dicari)
+	var tanggal int
+	var biaya float64
+	var pass, i int
+	var temp dataLangganan
 
-	left = 0
-	right = n - 1
-	idx = -1
-	for left <= right && idx == -1 {
-		mid = (left + right) / 2
-		if dicari < A[mid].tanggal {
-			right = mid - 1
-		} else if dicari > A[mid].tanggal {
-			left = mid + 1
-		} else {
-			idx = mid
+	if pilihan == 3 {
+		fmt.Print("Masukkan biaya yang akan dicari: ")
+		fmt.Scan(&biaya)
+
+		pass = 1
+		for pass <= n-1 {
+			i = pass
+			temp = A[pass]
+			for i > 0 && temp.biaya < A[i-1].biaya {
+				A[i] = A[i-1]
+				i--
+			}
+			A[i] = temp
+			pass++
 		}
+
+		left = 0
+		right = n - 1
+		idx = -1
 		mid = (left + right) / 2
+		for left <= right && idx == -1 {
+
+			if biaya < A[mid].biaya {
+				right = mid - 1
+			} else if biaya > A[mid].biaya {
+				left = mid + 1
+			} else {
+				idx = mid
+			}
+			mid = (left + right) / 2
+		}
+	} else if pilihan == 4 {
+		fmt.Print("Masukkan tanggal yang akan dicari: ")
+		fmt.Scan(&tanggal)
+
+		pass = 1
+		for pass <= n-1 {
+			i = pass
+			temp = A[pass]
+			for i > 0 && temp.tanggal < A[i-1].tanggal {
+				A[i] = A[i-1]
+				i--
+			}
+			A[i] = temp
+			pass++
+		}
+
+		left = 0
+		right = n - 1
+		idx = -1
+		mid = (left + right) / 2
+		for left <= right && idx == -1 {
+
+			if tanggal < A[mid].tanggal {
+				right = mid - 1
+			} else if tanggal > A[mid].tanggal {
+				left = mid + 1
+			} else {
+				idx = mid
+			}
+			mid = (left + right) / 2
+		}
 	}
+
 	if idx == -1 {
 		fmt.Println("Data Tidak Ditemukan")
 	} else {
+		fmt.Printf("Data yang dicari berada di posisi ke-%d setelah diurutkan ascending\n", idx+1)
 		TampilkanLangganan(A, idx)
 	}
 }
 
-func findMin(A TabLangganan, jumlah int, pilihan int, min *int){
+func findMin(A TabLangganan, jumlah int, pilihan int, min *int) {
 	if jumlah == 0 {
-        *min = 0
-        return
-    }
+		*min = 0
+		return
+	}
 	*min = 0
-    if pilihan == 1 { // cari biaya minimum
-        for i := 1; i < jumlah; i++ {
-            if A[i].biaya < A[*min].biaya {
-                *min = i
-            }
-        }
-    } else if pilihan == 2 { // cari tanggal minimum
-        for i := 1; i < jumlah; i++ {
-            if A[i].tanggal < A[*min].tanggal {
-                *min = i
-            }
+	if pilihan == 1 { //biaya
+		for i := 1; i < jumlah; i++ {
+			if A[i].biaya < A[*min].biaya {
+				*min = i
+			}
+		}
+	} else if pilihan == 2 { //tanggal
+		for i := 1; i < jumlah; i++ {
+			if A[i].tanggal < A[*min].tanggal {
+				*min = i
+			}
 		}
 	}
 }
-func findMax(A TabLangganan, jumlah int, pilihan int, max *int){
+func findMax(A TabLangganan, jumlah int, pilihan int, max *int) {
 	if jumlah == 0 {
-        *max = 0
-        return
-    }
+		*max = 0
+		return
+	}
 	*max = 0
-    if pilihan == 1 {
-        for i := 1; i < jumlah; i++ {
-            if A[i].biaya > A[*max].biaya{
-                *max = i
-            }
-        }
-    } else if pilihan == 2 {
-        for i := 1; i < jumlah; i++ {
-            if A[i].tanggal > A[*max].tanggal {
-                *max = i
-            }
- 		}
+	if pilihan == 1 {
+		for i := 1; i < jumlah; i++ { //biaya
+			if A[i].biaya > A[*max].biaya {
+				*max = i
+			}
+		}
+	} else if pilihan == 2 { //tanggal
+		for i := 1; i < jumlah; i++ {
+			if A[i].tanggal > A[*max].tanggal {
+				*max = i
+			}
+		}
 	}
 }
 
@@ -266,59 +469,205 @@ func TampilkanLangganan(A TabLangganan, i int) {
 	hitungTempo(&A, i)
 	if A[i].jatuhTempo < 0 {
 		fmt.Printf("   Jatuh tempo telah lewat : %d hari\n", (time.Now().Day() - A[i].tanggal))
+	} else if A[i].jatuhTempo == 0 {
+		fmt.Println("   Jatuh tempo hari ini")
 	} else {
 		fmt.Printf("   %d hari sebelum jatuh tempo\n", A[i].jatuhTempo)
 	}
 	fmt.Printf("   Status: %s\n", A[i].status)
 	fmt.Println("================================")
 }
-func SelectionSortBiaya(A *TabLangganan, N int) {
+func sort(A TabLangganan, jumlah int) {
+	var pilih int
+	var cara string
+
+	if jumlah <= 0 {
+		fmt.Println("Data Langganan Kosong!")
+		return
+	}
+
+	fmt.Println("Urutkan Secara Ascending atau Descending (1/2) : ")
+	fmt.Scan(&pilih)
+	if pilih == 1 {
+		cara = "Ascending"
+		menuSort()
+		fmt.Print("Pilih (1/2/3/4/5) : ")
+		fmt.Scan(&pilih)
+
+		switch pilih {
+		case 1:
+			InsertionSort(A, jumlah, pilih, cara) //nama
+		case 2:
+			InsertionSort(A, jumlah, pilih, cara) // metode
+		case 3:
+			SelectionSortBiaya(A, jumlah, cara) // biaya
+		case 4:
+			InsertionSort(A, jumlah, pilih, cara) // tgl
+		}
+	} else if pilih == 2 {
+		cara = "Descending"
+		menuSort()
+		fmt.Print("Pilih (1/2/3/4/5) : ")
+		fmt.Scan(&pilih)
+
+		switch pilih {
+		case 1:
+			InsertionSort(A, jumlah, pilih, cara) //nama
+		case 2:
+			InsertionSort(A, jumlah, pilih, cara) // metode
+		case 3:
+			SelectionSortBiaya(A, jumlah, cara) // biaya
+		case 4:
+			InsertionSort(A, jumlah, pilih, cara) // tgl
+		}
+	} else {
+		fmt.Println("Pilihan Tidak Valid!")
+		return
+	}
+}
+func SelectionSortBiaya(A TabLangganan, N int, cara string) {
 	var i, idx, pass int
 	var temp dataLangganan
 	pass = 1
 
-	for pass < N {
-		idx = pass
-		i = pass - 1
+	if cara == "Ascending" {
+		for pass < N {
+			idx = pass
+			i = pass - 1
 
-		for i < N {
-			if A[i].biaya > A[idx].biaya {
-				idx = i
+			for i < N {
+				if A[i].biaya < A[idx].biaya {
+					idx = i
+				}
+				i++
 			}
-			i++
+
+			temp = A[pass-1]
+			A[pass-1] = A[idx]
+			A[idx] = temp
+			pass++
 		}
+	} else if cara == "Descending" {
+		for pass < N {
+			idx = pass
+			i = pass - 1
 
-		temp = A[pass-1]
-		A[pass-1] = A[idx]
-		A[idx] = temp
-		pass++
+			for i < N {
+				if A[i].biaya > A[idx].biaya {
+					idx = i
+				}
+				i++
+			}
 
+			temp = A[pass-1]
+			A[pass-1] = A[idx]
+			A[idx] = temp
+			pass++
+		}
 	}
+	TampilkanSemuaLangganan(A, N)
 }
-func InsertionSortJatuhTempo(A *TabLangganan, N int) {
+func InsertionSort(A TabLangganan, N, pilihan int, cara string) {
 	var pass, i int
 	var temp dataLangganan
 
 	pass = 1
-	for pass <= N-1 {
-		i = pass
-		temp = A[pass]
-
-		for i > 0 && temp.tanggal > A[i-1].tanggal {
-			A[i] = A[i-1]
-			i--
+	if cara == "Ascending" {
+		switch pilihan {
+		case 1:
+			for pass <= N-1 {
+				i = pass
+				temp = A[pass]
+				for i > 0 && temp.nama < A[i-1].nama {
+					A[i] = A[i-1]
+					i--
+				}
+				A[i] = temp
+				pass++
+			}
+		case 2:
+			for pass <= N-1 {
+				i = pass
+				temp = A[pass]
+				for i > 0 && temp.metode < A[i-1].metode {
+					A[i] = A[i-1]
+					i--
+				}
+				A[i] = temp
+				pass++
+			}
+		case 4:
+			for pass <= N-1 {
+				i = pass
+				temp = A[pass]
+				for i > 0 && temp.tanggal < A[i-1].tanggal {
+					A[i] = A[i-1]
+					i--
+				}
+				A[i] = temp
+				pass++
+			}
 		}
-		A[i] = temp
-		pass++
+	} else if cara == "Descending" {
+		switch pilihan {
+		case 1:
+			for pass <= N-1 {
+				i = pass
+				temp = A[pass]
+				for i > 0 && temp.nama > A[i-1].nama {
+					A[i] = A[i-1]
+					i--
+				}
+				A[i] = temp
+				pass++
+			}
+		case 2:
+			for pass <= N-1 {
+				i = pass
+				temp = A[pass]
+				for i > 0 && temp.metode > A[i-1].metode {
+					A[i] = A[i-1]
+					i--
+				}
+				A[i] = temp
+				pass++
+			}
+		case 4:
+			for pass <= N-1 {
+				i = pass
+				temp = A[pass]
+				for i > 0 && temp.tanggal > A[i-1].tanggal {
+					A[i] = A[i-1]
+					i--
+				}
+				A[i] = temp
+				pass++
+			}
+		}
 	}
+	TampilkanSemuaLangganan(A, N)
 }
-func hitungPengeluaran(A TabLangganan, jumlah int) float64 {
+func hitungPengeluaran(A TabLangganan, jumlah int) {
 	var total float64
-	var i int
-	for i = 0; i < jumlah; i++ {
-		total += A[i].biaya
+	var i, pilih, max int
+
+	if jumlah <= 0 {
+		fmt.Println("Data Langganan Kosong!")
+		return
 	}
-	return total
+
+	for i = 0; i < jumlah; i++ {
+		if A[i].status == "Aktif" {
+			total += A[i].biaya
+		}
+	}
+
+	fmt.Printf("Total Pengeluaran Perbulan Adalah Rp.%.2f\n", total)
+	pilih = 1
+	findMax(A, jumlah, pilih, &max)
+
+	fmt.Printf("Data ke-%d disarankan untuk dihapus agar menghemat biaya\n", max+1)
+	TampilkanLangganan(A, max)
 }
 func TampilkanSemuaLangganan(A TabLangganan, jumlah int) {
 	var i int

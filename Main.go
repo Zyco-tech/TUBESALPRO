@@ -216,6 +216,47 @@ func binSearch(A TabLangganan, n, pilihan int) {
 	}
 }
 
+func findMin(A TabLangganan, jumlah int, pilihan int, min *int){
+	if jumlah == 0 {
+        *min = 0
+        return
+    }
+	*min = 0
+    if pilihan == 1 { // cari biaya minimum
+        for i := 1; i < jumlah; i++ {
+            if A[i].biaya < A[*min].biaya {
+                *min = i
+            }
+        }
+    } else if pilihan == 2 { // cari tanggal minimum
+        for i := 1; i < jumlah; i++ {
+            if A[i].tanggal < A[*min].tanggal {
+                *min = i
+            }
+		}
+	}
+}
+func findMax(A TabLangganan, jumlah int, pilihan int, max *int){
+	if jumlah == 0 {
+        *max = 0
+        return
+    }
+	*max = 0
+    if pilihan == 1 {
+        for i := 1; i < jumlah; i++ {
+            if A[i].biaya > A[*max].biaya{
+                *max = i
+            }
+        }
+    } else if pilihan == 2 {
+        for i := 1; i < jumlah; i++ {
+            if A[i].tanggal > A[*max].tanggal {
+                *max = i
+            }
+ 		}
+	}
+}
+
 func TampilkanLangganan(A TabLangganan, i int) {
 
 	fmt.Printf("%d. Nama: %s\n", i+1, A[i].nama)
